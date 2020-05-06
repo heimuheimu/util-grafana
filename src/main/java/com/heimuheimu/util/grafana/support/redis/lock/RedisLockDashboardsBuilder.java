@@ -36,6 +36,8 @@ import java.util.List;
 /**
  * 为 naiveredis 框架的 Redis 分布式锁生成对应的 dashboards，
  * 框架地址：<a href="http://github.com/heimuheimu/naiveredis/">naiveredis</a>
+ *
+ * @author heimuheimu
  */
 public class RedisLockDashboardsBuilder extends AbstractDashboardsBuilder {
 
