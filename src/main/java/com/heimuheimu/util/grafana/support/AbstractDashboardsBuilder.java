@@ -27,6 +27,8 @@ package com.heimuheimu.util.grafana.support;
 import com.heimuheimu.util.grafana.DashboardsBuilder;
 import com.heimuheimu.util.grafana.dashboard.Dashboard;
 import com.heimuheimu.util.grafana.dashboard.DashboardClient;
+import com.heimuheimu.util.grafana.datasource.DataSource;
+import com.heimuheimu.util.grafana.datasource.DataSourceClient;
 import com.heimuheimu.util.grafana.folder.Folder;
 import com.heimuheimu.util.grafana.folder.FolderClient;
 import com.heimuheimu.util.grafana.organization.Organization;
@@ -57,6 +59,16 @@ public abstract class AbstractDashboardsBuilder implements DashboardsBuilder {
     protected final OrganizationClient organizationClient;
 
     /**
+     * 数据源信息 API 客户端
+     */
+    protected final DataSourceClient dataSourceClient;
+
+    /**
+     * 数据源信息，数据源 ID 会被忽略
+     */
+    protected final DataSource dataSource;
+
+    /**
      * 文件夹信息 API 客户端
      */
     protected final FolderClient folderClient;
@@ -70,20 +82,38 @@ public abstract class AbstractDashboardsBuilder implements DashboardsBuilder {
      * 构造一个 AbstractDashboardsBuilder 实例。
      *
      * @param organizationClient 组织信息 API 客户端，不允许为 {@code null}
+     * @param dataSourceClient 数据源信息 API 客户端，不允许为 {@code null}
+     * @param dataSource 数据源信息，数据源 ID 会被忽略，不允许为 {@code null}
      * @param folderClient 文件夹信息 API 客户端，不允许为 {@code null}
      * @param dashboardClient Dashboard 信息 API 客户端，不允许为 {@code null}
      * @throws NullPointerException 如果 organizationClient 为 {@code null}，将会抛出此异常
+     * @throws NullPointerException 如果 dataSourceClient 为 {@code null}，将会抛出此异常
+     * @throws NullPointerException 如果 dataSource 为 {@code null}，将会抛出此异常
      * @throws NullPointerException 如果 folderClient 为 {@code null}，将会抛出此异常
      * @throws NullPointerException 如果 dashboardClient 为 {@code null}，将会抛出此异常
      */
-    protected AbstractDashboardsBuilder(OrganizationClient organizationClient, FolderClient folderClient,
-                                        DashboardClient dashboardClient) throws NullPointerException {
+    protected AbstractDashboardsBuilder(OrganizationClient organizationClient, DataSourceClient dataSourceClient, DataSource dataSource,
+                                        FolderClient folderClient, DashboardClient dashboardClient) throws NullPointerException {
         if (organizationClient == null) {
             String errorMessage = "Fails to create " + getClass().getSimpleName() + ": `organizationClient could not be null`";
             LOG.error(errorMessage);
             throw new NullPointerException(errorMessage);
         }
         this.organizationClient = organizationClient;
+
+        if (dataSourceClient == null) {
+            String errorMessage = "Fails to create " + getClass().getSimpleName() + ": `dataSourceClient could not be null`";
+            LOG.error(errorMessage);
+            throw new NullPointerException(errorMessage);
+        }
+        this.dataSourceClient = dataSourceClient;
+
+        if (dataSource == null) {
+            String errorMessage = "Fails to create " + getClass().getSimpleName() + ": `dataSource could not be null`";
+            LOG.error(errorMessage);
+            throw new NullPointerException(errorMessage);
+        }
+        this.dataSource = dataSource;
 
         if (folderClient == null) {
             String errorMessage = "Fails to create " + getClass().getSimpleName() + ": `folderClient could not be null`";
@@ -116,6 +146,21 @@ public abstract class AbstractDashboardsBuilder implements DashboardsBuilder {
         println(writer, "Fetch organization success: " + organization);
         organizationClient.switchOrganization(organization.getId());
         println(writer, "Switch organization success.");
+        // create datasource if absent
+        DataSource existedDataSource = dataSourceClient.getByName(dataSource.getName());
+        if (existedDataSource == null) {
+            existedDataSource = dataSourceClient.create(dataSource);
+            println(writer, "Create DataSource success: " + existedDataSource);
+        } else {
+            if (dataSource.getType().equals(existedDataSource.getType()) && dataSource.getUrl().equals(existedDataSource.getUrl())) {
+                println(writer, "Skip to create DataSource: " + existedDataSource);
+            } else {
+                String errorMessage = "Fails to build dashboards: `incompatible DataSource`. `current`:`" + existedDataSource
+                        + "`. `expected`:`" + dataSource + "`.";
+                LOG.error(errorMessage);
+                throw new RuntimeException(errorMessage);
+            }
+        }
         // create folder
         Folder folder = folderClient.create(getFolderName());
         println(writer, "Create folder success: " + folder);
