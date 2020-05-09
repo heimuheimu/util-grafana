@@ -36,9 +36,9 @@ import com.heimuheimu.util.grafana.dashboard.Variable;
 public class Query implements Variable {
 
     /**
-     * 数据源，默认为 "Prometheus"
+     * 数据源名称
      */
-    private String datasource = "Prometheus";
+    private String datasource;
 
     /**
      * 变量名称
@@ -77,27 +77,29 @@ public class Query implements Variable {
      * @param label 变量显示名称
      * @param query 变量值查询语句
      * @param regex 变量值过滤正则表达式
+     * @param datasource 数据源名称
      */
-    public Query(String name, String label, String query, String regex) {
+    public Query(String name, String label, String query, String regex, String datasource) {
         this.name = name;
         this.label = label;
         this.query = query;
         this.regex = regex;
+        this.datasource = datasource;
     }
 
     /**
-     * 获得数据源，默认为 "Prometheus"。
+     * 获得数据源名称。
      *
-     * @return 数据源
+     * @return 数据源名称
      */
     public String getDatasource() {
         return datasource;
     }
 
     /**
-     * 设置数据源。
+     * 设置数据源名称。
      *
-     * @param datasource 数据源
+     * @param datasource 数据源名称
      */
     public void setDatasource(String datasource) {
         this.datasource = datasource;

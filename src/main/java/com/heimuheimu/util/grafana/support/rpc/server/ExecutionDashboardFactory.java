@@ -37,35 +37,35 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class ExecutionDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Execution");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("name", "RPC 服务名称",
-                        "naiverpc_server_exec_count{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/"));
+                        "naiverpc_server_exec_count{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_exec_count",
                 "相邻两次采集周期内 RPC 方法执行次数",
                 new Graph.Target("naiverpc_server_exec_count{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_exec_peak_tps_count",
                 "相邻两次采集周期内每秒最大 RPC 方法执行次数",
                 new Graph.Target("naiverpc_server_exec_peak_tps_count{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_avg_exec_time_millisecond",
                 "相邻两次采集周期内单次 RPC 方法平均执行时间，单位：毫秒",
                 new Graph.Target("naiverpc_server_avg_exec_time_millisecond{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_max_exec_time_millisecond",
                 "相邻两次采集周期内单次 RPC 方法最大执行时间，单位：毫秒",
                 new Graph.Target("naiverpc_server_max_exec_time_millisecond{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

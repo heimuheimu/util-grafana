@@ -37,30 +37,30 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class ErrorDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Error");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("name", "RPC 服务名称",
-                        "naiverpc_server_exec_error_count{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/"));
+                        "naiverpc_server_exec_error_count{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_exec_error_count:InvocationError",
                 "相邻两次采集周期内执行 RPC 方法时抛出异常的次数",
                 new Graph.Target("naiverpc_server_exec_error_count{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"InvocationError\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_exec_error_count:SlowExecution",
                 "相邻两次采集周期内 RPC 方法执行过慢次数",
                 new Graph.Target("naiverpc_server_exec_error_count{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"SlowExecution\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_threadPool_reject_count",
                 "相邻两次采集周期内 RPC 服务端使用的线程池拒绝执行的任务总数",
                 new Graph.Target("naiverpc_server_threadPool_reject_count{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

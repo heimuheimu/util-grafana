@@ -37,45 +37,45 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class SocketDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Socket");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("name", "Redis 集群名称",
-                        "instance:naiveredis_socket_read_count:sum{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/"));
+                        "instance:naiveredis_socket_read_count:sum{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiveredis_socket_read_count:sum",
                 "相邻两次采集周期内 Socket 读取的次数，根据项目名称、主机地址和 Redis 集群名称进行聚合计算",
                 new Graph.Target("instance:naiveredis_socket_read_count:sum{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiveredis_socket_read_megabytes:sum",
                 "相邻两次采集周期内 Socket 读取的字节总数，单位：MB，根据项目名称、主机地址和 Redis 集群名称进行聚合计算",
                 new Graph.Target("instance:naiveredis_socket_read_megabytes:sum{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiveredis_socket_max_read_bytes:max",
                 "相邻两次采集周期内单次 Socket 读取的最大字节数，根据项目名称、主机地址和 Redis 集群名称进行聚合计算",
                 new Graph.Target("instance:naiveredis_socket_max_read_bytes:max{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiveredis_socket_write_count:sum",
                 "相邻两次采集周期内 Socket 写入的次数，根据项目名称、主机地址和 Redis 集群名称进行聚合计算",
                 new Graph.Target("instance:naiveredis_socket_write_count:sum{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiveredis_socket_write_megabytes:sum",
                 "相邻两次采集周期内 Socket 写入的字节总数，单位：MB，根据项目名称、主机地址和 Redis 集群名称进行聚合计算",
                 new Graph.Target("instance:naiveredis_socket_write_megabytes:sum{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiveredis_socket_max_write_bytes:max",
                 "相邻两次采集周期内单次 Socket 写入的最大字节数，根据项目名称、主机地址和 Redis 集群名称进行聚合计算",
                 new Graph.Target("instance:naiveredis_socket_max_write_bytes:max{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

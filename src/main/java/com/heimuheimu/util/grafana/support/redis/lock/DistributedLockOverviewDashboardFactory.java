@@ -28,7 +28,6 @@ import com.heimuheimu.util.grafana.dashboard.Dashboard;
 import com.heimuheimu.util.grafana.dashboard.panels.Graph;
 import com.heimuheimu.util.grafana.dashboard.panels.GridPos;
 import com.heimuheimu.util.grafana.dashboard.variables.Constant;
-import com.heimuheimu.util.grafana.dashboard.variables.Query;
 
 /**
  * Redis 分布式锁聚合信息 dashboard 工厂类。
@@ -37,7 +36,7 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class DistributedLockOverviewDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("DistributedLockOverview");
 
@@ -48,37 +47,37 @@ class DistributedLockOverviewDashboardFactory {
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_distributed_lock_success_count:sum",
                 "相邻两次采集周期内 Redis 分布式锁获取成功的次数，根据项目名称进行聚合计算，不区分具体的 Redis 集群名称",
                 new Graph.Target("job:naiveredis_distributed_lock_success_count:sum{job=\"[[job]]\"}", "{{job}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_distributed_lock_fail_count:sum",
                 "相邻两次采集周期内 Redis 分布式锁获取失败的次数，根据项目名称进行聚合计算，不区分具体的 Redis 集群名称",
                 new Graph.Target("job:naiveredis_distributed_lock_fail_count:sum{job=\"[[job]]\"}", "{{job}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_distributed_lock_error_count:sum",
                 "相邻两次采集周期内 Redis 分布式锁获取时出现异常的次数，根据项目名称进行聚合计算，不区分具体的 Redis 集群名称",
                 new Graph.Target("job:naiveredis_distributed_lock_error_count:sum{job=\"[[job]]\"}", "{{job}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_distributed_lock_unlock_success_count:sum",
                 "相邻两次采集周期内 Redis 分布式锁释放成功的次数，根据项目名称进行聚合计算，不区分具体的 Redis 集群名称",
                 new Graph.Target("job:naiveredis_distributed_lock_unlock_success_count:sum{job=\"[[job]]\"}", "{{job}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_distributed_lock_avg_holding_time_millisecond:avg",
                 "相邻两次采集周期内释放成功的 Redis 分布式锁的平均被持有时间，单位：毫秒，根据项目名称进行聚合计算，不区分具体的 Redis 集群名称",
                 new Graph.Target("job:naiveredis_distributed_lock_avg_holding_time_millisecond:avg{job=\"[[job]]\"}", "{{job}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_distributed_lock_max_holding_time_millisecond:max",
                 "相邻两次采集周期内释放成功的 Redis 分布式锁的最大持有时间，单位：毫秒，根据项目名称进行聚合计算，不区分具体的 Redis 集群名称",
                 new Graph.Target("job:naiveredis_distributed_lock_max_holding_time_millisecond:max{job=\"[[job]]\"}", "{{job}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_distributed_lock_unlock_error_count:sum",
                 "相邻两次采集周期内 Redis 分布式锁释放异常的次数，根据项目名称进行聚合计算，不区分具体的 Redis 集群名称",
                 new Graph.Target("job:naiveredis_distributed_lock_unlock_error_count:sum{job=\"[[job]]\"}", "{{job}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

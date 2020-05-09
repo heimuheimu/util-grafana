@@ -26,6 +26,8 @@ package com.heimuheimu.util.grafana.support.redis.subscriber;
 
 import com.heimuheimu.util.grafana.dashboard.Dashboard;
 import com.heimuheimu.util.grafana.dashboard.DashboardClient;
+import com.heimuheimu.util.grafana.datasource.DataSource;
+import com.heimuheimu.util.grafana.datasource.DataSourceClient;
 import com.heimuheimu.util.grafana.folder.FolderClient;
 import com.heimuheimu.util.grafana.organization.OrganizationClient;
 import com.heimuheimu.util.grafana.support.AbstractDashboardsBuilder;
@@ -45,14 +47,19 @@ public class RedisSubscriberDashboardsBuilder extends AbstractDashboardsBuilder 
      * 构造一个 RedisSubscriberDashboardsBuilder 实例。
      *
      * @param organizationClient 组织信息 API 客户端，不允许为 {@code null}
+     * @param dataSourceClient 数据源信息 API 客户端，不允许为 {@code null}
+     * @param dataSource 数据源信息，数据源 ID 会被忽略，不允许为 {@code null}
      * @param folderClient 文件夹信息 API 客户端，不允许为 {@code null}
      * @param dashboardClient Dashboard 信息 API 客户端，不允许为 {@code null}
      * @throws NullPointerException 如果 organizationClient 为 {@code null}，将会抛出此异常
+     * @throws NullPointerException 如果 dataSourceClient 为 {@code null}，将会抛出此异常
+     * @throws NullPointerException 如果 dataSource 为 {@code null}，将会抛出此异常
      * @throws NullPointerException 如果 folderClient 为 {@code null}，将会抛出此异常
      * @throws NullPointerException 如果 dashboardClient 为 {@code null}，将会抛出此异常
      */
-    public RedisSubscriberDashboardsBuilder(OrganizationClient organizationClient, FolderClient folderClient, DashboardClient dashboardClient) throws NullPointerException {
-        super(organizationClient, folderClient, dashboardClient);
+    public RedisSubscriberDashboardsBuilder(OrganizationClient organizationClient, DataSourceClient dataSourceClient,
+                                               DataSource dataSource, FolderClient folderClient, DashboardClient dashboardClient) throws NullPointerException {
+        super(organizationClient, dataSourceClient, dataSource, folderClient, dashboardClient);
     }
 
     @Override
@@ -63,8 +70,8 @@ public class RedisSubscriberDashboardsBuilder extends AbstractDashboardsBuilder 
     @Override
     protected List<Dashboard> getDashboardList(String organizationName, String interval) {
         List<Dashboard> dashboardList = new ArrayList<>();
-        dashboardList.add(ExecutionDashboardFactory.create(organizationName, interval));
-        dashboardList.add(OverviewDashboardFactory.create(organizationName, interval));
+        dashboardList.add(ExecutionDashboardFactory.create(organizationName, interval, dataSource.getName()));
+        dashboardList.add(OverviewDashboardFactory.create(organizationName, interval, dataSource.getName()));
         return dashboardList;
     }
 

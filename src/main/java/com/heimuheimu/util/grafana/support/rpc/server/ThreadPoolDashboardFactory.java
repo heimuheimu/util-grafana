@@ -37,45 +37,45 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class ThreadPoolDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("ThreadPool");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("name", "RPC 服务名称",
-                        "naiverpc_server_threadPool_reject_count{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/"));
+                        "naiverpc_server_threadPool_reject_count{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_threadPool_reject_count",
                 "相邻两次采集周期内监控器中所有线程池拒绝执行的任务总数",
                 new Graph.Target("naiverpc_server_threadPool_reject_count{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_threadPool_active_count",
                 "采集时刻监控器中的所有线程池活跃线程数近似值总和",
                 new Graph.Target("naiverpc_server_threadPool_active_count{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_threadPool_pool_size",
                 "采集时刻监控器中的所有线程池线程数总和",
                 new Graph.Target("naiverpc_server_threadPool_pool_size{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_threadPool_peak_pool_size",
                 "监控器中的所有线程池出现过的最大线程数总和",
                 new Graph.Target("naiverpc_server_threadPool_peak_pool_size{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_threadPool_core_pool_size",
                 "监控器中的所有线程池配置的核心线程数总和",
                 new Graph.Target("naiverpc_server_threadPool_core_pool_size{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_server_threadPool_maximum_pool_size",
                 "监控器中的所有线程池配置的最大线程数总和",
                 new Graph.Target("naiverpc_server_threadPool_maximum_pool_size{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

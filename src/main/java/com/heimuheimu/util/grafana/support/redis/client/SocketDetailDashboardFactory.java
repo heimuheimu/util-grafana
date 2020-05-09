@@ -37,47 +37,47 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class SocketDetailDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("SocketDetail");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("name", "Redis 集群名称",
-                        "naiveredis_socket_read_count{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/"))
+                        "naiveredis_socket_read_count{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/", datasource))
                 .addVariable(new Query("instance", "主机地址",
-                        "naiveredis_socket_read_count{job=\"" + job + "\"}", "/.*instance=\"([^\"]*).*/"));
+                        "naiveredis_socket_read_count{job=\"" + job + "\"}", "/.*instance=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_socket_read_count",
                 "相邻两次采集周期内 Socket 读取的次数",
                 new Graph.Target("naiveredis_socket_read_count{name=~\"[[name]]\",instance=~\"[[instance]]\",job=\"[[job]]\"}", "{{remoteAddress}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_socket_read_bytes",
                 "相邻两次采集周期内 Socket 读取的字节总数",
                 new Graph.Target("naiveredis_socket_read_bytes{name=~\"[[name]]\",instance=~\"[[instance]]\",job=\"[[job]]\"}", "{{remoteAddress}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_socket_max_read_bytes",
                 "相邻两次采集周期内单次 Socket 读取的最大字节数",
                 new Graph.Target("naiveredis_socket_max_read_bytes{name=~\"[[name]]\",instance=~\"[[instance]]\",job=\"[[job]]\"}", "{{remoteAddress}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_socket_write_count",
                 "相邻两次采集周期内 Socket 写入的次数",
                 new Graph.Target("naiveredis_socket_write_count{name=~\"[[name]]\",instance=~\"[[instance]]\",job=\"[[job]]\"}", "{{remoteAddress}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_socket_write_bytes",
                 "相邻两次采集周期内 Socket 写入的字节总数",
                 new Graph.Target("naiveredis_socket_write_bytes{name=~\"[[name]]\",instance=~\"[[instance]]\",job=\"[[job]]\"}", "{{remoteAddress}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_socket_max_write_bytes",
                 "相邻两次采集周期内单次 Socket 写入的最大字节数",
                 new Graph.Target("naiveredis_socket_max_write_bytes{name=~\"[[name]]\",instance=~\"[[instance]]\",job=\"[[job]]\"}", "{{remoteAddress}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

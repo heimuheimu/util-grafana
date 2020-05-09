@@ -39,9 +39,9 @@ import java.util.List;
 public class Graph implements Panel {
 
     /**
-     * 数据源，默认为 "Prometheus"
+     * 数据源名称
      */
-    private String datasource = "Prometheus";
+    private String datasource;
 
     /**
      * 图表信息 ID
@@ -82,29 +82,31 @@ public class Graph implements Panel {
      * @param target 图表目标数据信息
      * @param gridPos 图表位置信息
      * @param interval 图表目标数据获取周期，例如：30s、1m ...
+     * @param datasource 数据源名称
      */
-    public Graph(int id, String title, String description, Target target, GridPos gridPos, String interval) {
+    public Graph(int id, String title, String description, Target target, GridPos gridPos, String interval, String datasource) {
         this.id = id;
         this.title = title;
         this.description = description;
         targets.add(target);
         this.gridPos = gridPos;
         this.interval = interval;
+        this.datasource = datasource;
     }
 
     /**
-     * 获得数据源，默认为 "Prometheus"。
+     * 获得数据源名称。
      *
-     * @return 数据源
+     * @return 数据源名称
      */
     public String getDatasource() {
         return datasource;
     }
 
     /**
-     * 设置数据源。
+     * 设置数据源名称。
      *
-     * @param datasource 数据源
+     * @param datasource 数据源名称
      */
     public void setDatasource(String datasource) {
         this.datasource = datasource;

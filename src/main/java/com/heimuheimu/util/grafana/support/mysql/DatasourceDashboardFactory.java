@@ -37,35 +37,35 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class DatasourceDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Datasource");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("database", "数据库", "mysql_jdbc_datasource_acquired_connection_count{job=\"" + job + "\"}",
-                        "/.*database=\"([^\"]*).*/"));
+                        "/.*database=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_datasource_acquired_connection_count",
                 "采集时刻连接池正在使用的连接数量",
                 new Graph.Target("mysql_jdbc_datasource_acquired_connection_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_datasource_max_acquired_connection_count",
                 "相邻两次采集周期内连接池使用的最大连接数量",
                 new Graph.Target("mysql_jdbc_datasource_max_acquired_connection_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_datasource_connection_leaked_count",
                 "相邻两次采集周期内连接池发生连接泄漏的次数",
                 new Graph.Target("mysql_jdbc_datasource_connection_leaked_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_datasource_get_connection_failed_count",
                 "相邻两次采集周期内连接池获取不到连接的次数",
                 new Graph.Target("mysql_jdbc_datasource_get_connection_failed_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

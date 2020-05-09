@@ -37,40 +37,40 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class ErrorDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Error");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("name", "RPC 服务名称",
-                "instance:naiverpc_client_exec_error_count:sum{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/"));
+                "instance:naiverpc_client_exec_error_count:sum{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiverpc_client_exec_error_count:sum:TooBusy",
                 "相邻两次采集周期内调用 RPC 方法出现 RPC 服务端繁忙错误次数",
                 new Graph.Target("instance:naiverpc_client_exec_error_count:sum{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"TooBusy\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiverpc_client_exec_error_count:sum:Timeout",
                 "相邻两次采集周期内调用 RPC 方法出现执行超时错误次数",
                 new Graph.Target("instance:naiverpc_client_exec_error_count:sum{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"Timeout\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiverpc_client_exec_error_count:sum:InvocationError",
                 "相邻两次采集周期内调用 RPC 方法抛出异常的次数",
                 new Graph.Target("instance:naiverpc_client_exec_error_count:sum{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"InvocationError\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "instance:naiverpc_client_exec_error_count:sum:SlowExecution",
                 "相邻两次采集周期内调用 RPC 方法出现执行过慢的次数",
                 new Graph.Target("instance:naiverpc_client_exec_error_count:sum{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"SlowExecution\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiverpc_client_threadPool_reject_count",
                 "相邻两次采集周期内 RPC 客户端使用的线程池拒绝执行的任务总数",
                 new Graph.Target("naiverpc_client_threadPool_reject_count{job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
 
         return dashboard;
     }

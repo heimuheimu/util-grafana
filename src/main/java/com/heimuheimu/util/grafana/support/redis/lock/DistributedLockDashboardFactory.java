@@ -36,7 +36,7 @@ import com.heimuheimu.util.grafana.dashboard.variables.Constant;
  */
 class DistributedLockDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("DistributedLock");
 
@@ -47,37 +47,37 @@ class DistributedLockDashboardFactory {
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_distributed_lock_success_count",
                 "相邻两次采集周期内 Redis 分布式锁获取成功的次数",
                 new Graph.Target("naiveredis_distributed_lock_success_count{job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_distributed_lock_fail_count",
                 "相邻两次采集周期内 Redis 分布式锁获取失败的次数",
                 new Graph.Target("naiveredis_distributed_lock_fail_count{job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_distributed_lock_error_count",
                 "相邻两次采集周期内 Redis 分布式锁获取时出现异常的次数",
                 new Graph.Target("naiveredis_distributed_lock_error_count{job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_distributed_lock_unlock_success_count",
                 "相邻两次采集周期内 Redis 分布式锁释放成功的次数",
                 new Graph.Target("naiveredis_distributed_lock_unlock_success_count{job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_distributed_lock_avg_holding_time_millisecond",
                 "相邻两次采集周期内释放成功的 Redis 分布式锁的平均被持有时间，单位：毫秒",
                 new Graph.Target("naiveredis_distributed_lock_avg_holding_time_millisecond{job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_distributed_lock_max_holding_time_millisecond",
                 "相邻两次采集周期内释放成功的 Redis 分布式锁的最大持有时间，单位：毫秒",
                 new Graph.Target("naiveredis_distributed_lock_max_holding_time_millisecond{job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_distributed_lock_unlock_error_count",
                 "相邻两次采集周期内 Redis 分布式锁释放异常的次数",
                 new Graph.Target("naiveredis_distributed_lock_unlock_error_count{job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

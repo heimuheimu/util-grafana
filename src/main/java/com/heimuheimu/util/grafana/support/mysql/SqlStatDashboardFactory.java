@@ -37,75 +37,75 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class SqlStatDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("SqlStat");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("database", "数据库", "mysql_jdbc_select_count{job=\"" + job + "\"}",
-                        "/.*database=\"([^\"]*).*/"));
+                        "/.*database=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_select_count",
                 "相邻两次采集周期内 SELECT 语句执行总次数",
                 new Graph.Target("mysql_jdbc_select_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_select_rows_count",
                 "相邻两次采集周期内所有 SELECT 语句返回的记录总数",
                 new Graph.Target("mysql_jdbc_select_rows_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_max_select_rows_count",
                 "相邻两次采集周期内单条 SELECT 语句返回的最大记录数",
                 new Graph.Target("mysql_jdbc_max_select_rows_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_insert_count",
                 "相邻两次采集周期内所有 INSERT 语句执行总次数",
                 new Graph.Target("mysql_jdbc_insert_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_insert_rows_count",
                 "相邻两次采集周期内所有 INSERT 语句插入的记录总数",
                 new Graph.Target("mysql_jdbc_insert_rows_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_max_insert_rows_count",
                 "相邻两次采集周期内单条 INSERT 语句插入的最大记录数",
                 new Graph.Target("mysql_jdbc_max_insert_rows_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_update_count",
                 "相邻两次采集周期内所有 UPDATE 语句执行总次数",
                 new Graph.Target("mysql_jdbc_update_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_update_rows_count",
                 "相邻两次采集周期内所有 UPDATE 语句更新的记录总数",
                 new Graph.Target("mysql_jdbc_update_rows_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_max_update_rows_count",
                 "相邻两次采集周期内单条 UPDATE 语句更新的最大记录数",
                 new Graph.Target("mysql_jdbc_max_update_rows_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_delete_count",
                 "相邻两次采集周期内所有 DELETE 语句执行总次数",
                 new Graph.Target("mysql_jdbc_delete_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_delete_rows_count",
                 "相邻两次采集周期内所有 DELETE 语句删除的记录总数",
                 new Graph.Target("mysql_jdbc_delete_rows_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_max_delete_rows_count",
                 "相邻两次采集周期内单条 DELETE 语句删除的最大记录数",
                 new Graph.Target("mysql_jdbc_max_delete_rows_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

@@ -37,40 +37,40 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class OverviewDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Overview");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("name", "Redis 集群名称",
-                        "job:naiveredis_subscriber_exec_count:sum{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/"));
+                        "job:naiveredis_subscriber_exec_count:sum{job=\"" + job + "\"}", "/.*name=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_subscriber_exec_count:sum",
                 "相邻两次采集周期内消费消息总数，根据项目名称和 Redis 集群名称进行聚合计算",
                 new Graph.Target("job:naiveredis_subscriber_exec_count:sum{name=~\"[[name]]\",job=\"[[job]]\"}", "{{name}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_subscriber_exec_peak_tps_count:sum",
                 "相邻两次采集周期内每秒最大消费消息数量，根据项目名称和 Redis 集群名称进行聚合计算（该值为估算值，实际值一般小于该估算值）",
                 new Graph.Target("job:naiveredis_subscriber_exec_peak_tps_count:sum{name=~\"[[name]]\",job=\"[[job]]\"}", "{{name}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_subscriber_max_exec_time_millisecond:max",
                 "相邻两次采集周期内消费单条消息最大执行时间，单位：毫秒，根据项目名称和 Redis 集群名称进行聚合计算",
                 new Graph.Target("job:naiveredis_subscriber_max_exec_time_millisecond:max{name=~\"[[name]]\",job=\"[[job]]\"}", "{{name}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_subscriber_avg_exec_time_millisecond:avg",
                 "相邻两次采集周期内消费单条消息平均执行时间，单位：毫秒，根据项目名称和 Redis 集群名称进行聚合计算",
                 new Graph.Target("job:naiveredis_subscriber_avg_exec_time_millisecond:avg{name=~\"[[name]]\",job=\"[[job]]\"}", "{{name}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "job:naiveredis_subscriber_exec_error_count:sum",
                 "相邻两次采集周期内发生的消息消费失败次数（包含消费过慢），根据项目名称和 Redis 集群名称进行聚合计算",
                 new Graph.Target("job:naiveredis_subscriber_exec_error_count:sum{name=~\"[[name]]\",job=\"[[job]]\"}", "{{name}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }

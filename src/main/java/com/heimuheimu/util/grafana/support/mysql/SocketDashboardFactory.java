@@ -37,45 +37,45 @@ import com.heimuheimu.util.grafana.dashboard.variables.Query;
  */
 class SocketDashboardFactory {
 
-    public static Dashboard create(String job, String interval) {
+    public static Dashboard create(String job, String interval, String datasource) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Socket");
 
         dashboard.addVariable(new Constant("interval", interval))
                 .addVariable(new Constant("job", job))
                 .addVariable(new Query("database", "数据库", "mysql_jdbc_socket_read_count{job=\"" + job + "\"}",
-                        "/.*database=\"([^\"]*).*/"));
+                        "/.*database=\"([^\"]*).*/", datasource));
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_socket_read_count",
                 "相邻两次采集周期内 Socket 读取的次数",
                 new Graph.Target("mysql_jdbc_socket_read_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_socket_read_megabytes",
                 "相邻两次采集周期内 Socket 读取的字节总数，单位：MB",
                 new Graph.Target("mysql_jdbc_socket_read_bytes{database=\"[[database]]\",job=\"[[job]]\"} / 1024 / 1024", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_socket_max_read_kilobytes",
                 "相邻两次采集周期内单次 Socket 读取的最大字节数，单位：KB",
                 new Graph.Target("mysql_jdbc_socket_max_read_bytes{database=\"[[database]]\",job=\"[[job]]\"} / 1024", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_socket_write_count",
                 "相邻两次采集周期内 Socket 写入的次数",
                 new Graph.Target("mysql_jdbc_socket_write_count{database=\"[[database]]\",job=\"[[job]]\"}", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_socket_write_megabytes",
                 "相邻两次采集周期内 Socket 写入的字节总数，单位：MB",
                 new Graph.Target("mysql_jdbc_socket_write_bytes{database=\"[[database]]\",job=\"[[job]]\"} / 1024 / 1024", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex++), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "mysql_jdbc_socket_max_write_kilobytes",
                 "相邻两次采集周期内单次 Socket 写入的最大字节数，单位：KB",
                 new Graph.Target("mysql_jdbc_socket_max_write_bytes{database=\"[[database]]\",job=\"[[job]]\"} / 1024", "{{instance}}"),
-                GridPos.buildForTwoColumns(panelIndex), "$interval"));
+                GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));
         return dashboard;
     }
 }
