@@ -45,7 +45,7 @@ class ThreadDashboardFactory {
 
         int panelIndex = 0;
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "hotspot_thread_count",
-                "采集时刻存活线程总数",
+                "采集时刻存活线程总数，包括 daemon 和 non-daemon 线程",
                 new Graph.Target("hotspot_thread_count{job=\"[[job]]\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
