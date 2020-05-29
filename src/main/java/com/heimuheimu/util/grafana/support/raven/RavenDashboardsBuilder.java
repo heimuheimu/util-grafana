@@ -36,7 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 为 IM 服务信息生成对应的 dashboards。
+ * IM 服务信息图表生成器，对应的 Prometheus 监控指标采集器：
+ * <a href="https://github.com/heimuheimu/raven/blob/master/src/main/java/com/heimuheimu/raven/monitor/prometheus/IMCompositePrometheusCollector.java">
+ *     IMCompositePrometheusCollector
+ * </a>
  *
  * @author heimuheimu
  */

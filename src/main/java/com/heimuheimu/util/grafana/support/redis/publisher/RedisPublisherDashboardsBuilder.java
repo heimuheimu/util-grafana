@@ -36,8 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 为 naiveredis 框架的消息发布客户端生成对应的 dashboards，
- * 框架地址：<a href="http://github.com/heimuheimu/naiveredis/">naiveredis</a>
+ * Redis 消息发布客户端信息图表生成器，对应的 Prometheus 监控指标采集器：
+ * <a href="https://github.com/heimuheimu/naiveredis/blob/master/src/main/java/com/heimuheimu/naiveredis/monitor/prometheus/RedisPublisherPrometheusCollector.java">
+ *     RedisPublisherPrometheusCollector
+ * </a>
  *
  * @author heimuheimu
  */

@@ -36,8 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 为 naivecache 框架的本地缓存客户端生成对应的 dashboards，
- * 框架地址：<a href="http://github.com/heimuheimu/naivecache/">naivecache</a>
+ * 本地缓存客户端信息图表生成器，对应的 Prometheus 监控指标采集器：
+ * <a href="https://github.com/heimuheimu/naivecache/blob/master/src/main/java/com/heimuheimu/naivecache/localcache/monitor/prometheus/LocalCachePrometheusDataCollector.java">
+ *     LocalCachePrometheusDataCollector
+ * </a>
  *
  * @author heimuheimu
  */

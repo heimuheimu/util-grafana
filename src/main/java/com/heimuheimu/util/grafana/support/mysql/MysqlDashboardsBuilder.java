@@ -36,8 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 为 mysql-jdbc 框架生成对应的 dashboards，
- * 框架地址：<a href="http://github.com/heimuheimu/mysql-jdbc/">mysql-jdbc</a>
+ * MySQL 客户端监控信息图表生成器，对应的 Prometheus 监控指标采集器：
+ * <a href="https://github.com/heimuheimu/mysql-jdbc/blob/master/src/main/java/com/heimuheimu/mysql/jdbc/monitor/prometheus/DatabaseCompositePrometheusCollector.java">
+ *     DatabaseCompositePrometheusCollector
+ * </a>
  *
  * @author heimuheimu
  */

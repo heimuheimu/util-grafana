@@ -36,8 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 为 naiveasync 框架的消息消费者生成对应的 dashboards，
- * 框架地址：<a href="http://github.com/heimuheimu/naiveasync/">naiveasync</a>
+ * 异步消息消费者信息图表生成器，对应的 Prometheus 监控指标采集器：
+ * <a href="https://github.com/heimuheimu/naiveasync/blob/master/src/main/java/com/heimuheimu/naiveasync/monitor/consumer/prometheus/AsyncMessageConsumerPrometheusDataCollector.java">
+ *     AsyncMessageConsumerPrometheusDataCollector
+ * </a>
  *
  * @author heimuheimu
  */

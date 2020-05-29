@@ -36,7 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 为 JVM 监控信息生成对应的 dashboards。
+ * JVM 监控信息图表生成器，对应的 Prometheus 监控指标采集器：
+ * <a href="https://github.com/heimuheimu/naivemonitor/blob/master/src/main/java/com/heimuheimu/naivemonitor/prometheus/support/hotspot/HotspotCompositePrometheusCollector.java">
+ *     HotspotCompositePrometheusCollector
+ * </a>
  *
  * @author heimuheimu
  */
