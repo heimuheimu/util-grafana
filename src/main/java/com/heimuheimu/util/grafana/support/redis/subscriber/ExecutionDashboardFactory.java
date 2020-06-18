@@ -67,22 +67,22 @@ class ExecutionDashboardFactory {
                 new Graph.Target("naiveredis_subscriber_max_exec_time_millisecond{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
-        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_subscriber_exec_error_count",
+        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_subscriber_exec_error_count:DecodeError",
                 "相邻两次采集周期内发生的消息解码失败次数",
                 new Graph.Target("naiveredis_subscriber_exec_error_count{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"DecodeError\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
-        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_subscriber_exec_error_count",
+        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_subscriber_exec_error_count:ConsumeError",
                 "相邻两次采集周期内发生的消息消费失败次数",
                 new Graph.Target("naiveredis_subscriber_exec_error_count{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"ConsumeError\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
-        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_subscriber_exec_error_count",
+        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_subscriber_exec_error_count:UnexpectedError",
                 "相邻两次采集周期内发生的消息消费出现预期外异常的次数",
                 new Graph.Target("naiveredis_subscriber_exec_error_count{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"UnexpectedError\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
-        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_subscriber_exec_error_count",
+        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_subscriber_exec_error_count:SlowConsumption",
                 "相邻两次采集周期内发生的消息消费过慢的次数",
                 new Graph.Target("naiveredis_subscriber_exec_error_count{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"SlowConsumption\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));

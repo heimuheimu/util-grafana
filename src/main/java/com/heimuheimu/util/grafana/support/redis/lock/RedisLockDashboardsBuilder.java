@@ -36,8 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 为 naiveredis 框架的 Redis 分布式锁生成对应的 dashboards，
- * 框架地址：<a href="http://github.com/heimuheimu/naiveredis/">naiveredis</a>
+ * Redis 分布式锁信息图表生成器，对应的 Prometheus 监控指标采集器：
+ * <a href="https://github.com/heimuheimu/naiveredis/blob/master/src/main/java/com/heimuheimu/naiveredis/monitor/prometheus/RedisLockCompositePrometheusCollector.java">
+ *     RedisLockCompositePrometheusCollector
+ * </a>
  *
  * @author heimuheimu
  */

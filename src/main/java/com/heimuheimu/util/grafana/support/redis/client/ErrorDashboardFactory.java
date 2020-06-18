@@ -83,7 +83,7 @@ class ErrorDashboardFactory {
                 GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
         dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_threadPool_reject_count",
-                "相邻两次采集周期内 RPC 客户端使用的线程池拒绝执行的任务总数",
+                "相邻两次采集周期内 Redis 客户端使用的线程池拒绝执行的任务总数",
                 new Graph.Target("naiveredis_threadPool_reject_count{job=\"[[job]]\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 

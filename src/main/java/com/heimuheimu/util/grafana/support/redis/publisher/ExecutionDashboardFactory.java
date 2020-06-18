@@ -67,12 +67,12 @@ class ExecutionDashboardFactory {
                 new Graph.Target("naiveredis_publisher_max_exec_time_millisecond{name=~\"[[name]]\",job=\"[[job]]\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
-        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_publisher_exec_error_count",
+        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_publisher_exec_error_count:PublishError",
                 "相邻两次采集周期内发生的消息发布失败次数",
                 new Graph.Target("naiveredis_publisher_exec_error_count{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"PublishError\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex++), "$interval", datasource));
 
-        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_publisher_exec_error_count",
+        dashboard.addPanel(new Graph((panelIndex + 1) * 2, "naiveredis_publisher_exec_error_count:NoClient",
                 "相邻两次采集周期内发生的消息订阅者数量为 0 的次数",
                 new Graph.Target("naiveredis_publisher_exec_error_count{name=~\"[[name]]\",job=\"[[job]]\",errorType=\"NoClient\"}", "{{instance}}"),
                 GridPos.buildForTwoColumns(panelIndex), "$interval", datasource));

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.heimuheimu.util.grafana.support.mysql;
+package com.heimuheimu.util.grafana.support.cache.memcached;
 
 import com.heimuheimu.util.grafana.dashboard.Dashboard;
 import com.heimuheimu.util.grafana.dashboard.DashboardClient;
@@ -36,17 +36,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MySQL 客户端监控信息图表生成器，对应的 Prometheus 监控指标采集器：
- * <a href="https://github.com/heimuheimu/mysql-jdbc/blob/master/src/main/java/com/heimuheimu/mysql/jdbc/monitor/prometheus/DatabaseCompositePrometheusCollector.java">
- *     DatabaseCompositePrometheusCollector
+ * Memcached 客户端信息图表生成器，对应的 Prometheus 监控指标采集器：
+ * <a href="https://github.com/heimuheimu/naivecache/blob/master/src/main/java/com/heimuheimu/naivecache/memcached/monitor/prometheus/MemcachedCompositePrometheusCollector.java">
+ *     MemcachedCompositePrometheusCollector
  * </a>
  *
  * @author heimuheimu
  */
-public class MysqlDashboardsBuilder extends AbstractDashboardsBuilder {
+public class MemcachedDashboardsBuilder extends AbstractDashboardsBuilder {
 
     /**
-     * 构造一个 MysqlDashboardsBuilder 实例。
+     * 构造一个 MemcachedDashboardsBuilder 实例。
      *
      * @param organizationClient 组织信息 API 客户端，不允许为 {@code null}
      * @param dataSourceClient 数据源信息 API 客户端，不允许为 {@code null}
@@ -59,30 +59,36 @@ public class MysqlDashboardsBuilder extends AbstractDashboardsBuilder {
      * @throws NullPointerException 如果 folderClient 为 {@code null}，将会抛出此异常
      * @throws NullPointerException 如果 dashboardClient 为 {@code null}，将会抛出此异常
      */
-    public MysqlDashboardsBuilder(OrganizationClient organizationClient, DataSourceClient dataSourceClient,
-                                     DataSource dataSource, FolderClient folderClient, DashboardClient dashboardClient) throws NullPointerException {
+    public MemcachedDashboardsBuilder(OrganizationClient organizationClient, DataSourceClient dataSourceClient,
+                                      DataSource dataSource, FolderClient folderClient, DashboardClient dashboardClient) throws NullPointerException {
         super(organizationClient, dataSourceClient, dataSource, folderClient, dashboardClient);
     }
 
     @Override
     protected String getFolderName() {
-        return "mysql-jdbc";
+        return "naivecache-memcached";
     }
 
     @Override
     protected List<Dashboard> getDashboardList(String organizationName, String interval) {
         List<Dashboard> dashboardList = new ArrayList<>();
-        dashboardList.add(DatasourceDashboardFactory.create(organizationName, interval, dataSource.getName()));
+        dashboardList.add(CompressionDashboardFactory.create(organizationName, interval, dataSource.getName()));
         dashboardList.add(ErrorDashboardFactory.create(organizationName, interval, dataSource.getName()));
         dashboardList.add(ExecutionDashboardFactory.create(organizationName, interval, dataSource.getName()));
+        dashboardList.add(ExecutionDetailDashboardFactory.create(organizationName, interval, dataSource.getName()));
         dashboardList.add(OverviewDashboardFactory.create(organizationName, interval, dataSource.getName()));
         dashboardList.add(SocketDashboardFactory.create(organizationName, interval, dataSource.getName()));
-        dashboardList.add(SqlStatDashboardFactory.create(organizationName, interval, dataSource.getName()));
+        dashboardList.add(SocketDetailDashboardFactory.create(organizationName, interval, dataSource.getName()));
+        dashboardList.add(ThreadPoolDashboardFactory.create(organizationName, interval, dataSource.getName()));
         return dashboardList;
     }
 
     @Override
     public boolean isSupported(String type) {
-        return type != null && type.toLowerCase().contains("mysql");
+        if (type != null) {
+            type = type.toLowerCase();
+            return type.contains("cache") && type.contains("mem");
+        }
+        return false;
     }
 }
